@@ -15,8 +15,6 @@
   margin: 5px;
   height: 400px;
   width: 400px;
-  /* filter:grayscale(100%); */
-  /* filter: blur(5px); */
  }
 .video-player {
   display: flex;
@@ -29,27 +27,10 @@
   color: white;
   background-color: black;
   display: flex;
-  align-items: center;
+  flex-direction: column;
 }
 </style>
-<script>
-   // based off of this tutorial: https://www.youtube.com/watch?v=NTmkwhAMTvI
-window.onload = function(){
-const constraints = {audio: true, video: true};
-navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream){
-    const video = document.querySelector('video');
-    const volume = document.querySelector('#myRange')
-    video.srcObject = mediaStream;
-    video.play();
-    video.volume = 0;
-    volume.onchange = function(){
-      video.volume = volume.value;
-    }
-  }).catch(function(err){
-    alert("Yikes, an error!");
-  })
-  }
-</script>
+
 <body>
   <header>
     <h2>Live Stream</h2>
@@ -66,8 +47,58 @@ navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream){
         step="0.01"
         class="slider" 
         id="myRange">
+    <button id="blur">Blur</button>
+    <button id="black-and-white">Sepia</button>
+    <button id="ghost">Ghost</button>
   </div>
   <video></video>
   </div>
 </body>
+
+<script>
+  // based off of this tutorial: https://www.youtube.com/watch?v=NTmkwhAMTvI
+window.onload = function(){
+const constraints = {audio: true, video: true};
+navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream){
+   const video = document.querySelector('video');
+   const volume = document.querySelector('#myRange')
+   video.srcObject = mediaStream;
+   video.play();
+   video.volume = 0;
+   volume.onchange = function(){
+     video.volume = volume.value;
+   }
+
+   const blur = document.querySelector("#blur");
+   let blurIsOn = false;
+   blur.addEventListener("click",function(e){
+     e.preventDefault(); 
+     blurIsOn = !blurIsOn; 
+     blurIsOn ? video.style.filter = "blur(5px)" : video.style.filter = "none"
+     });
+
+     const blackAndWhite = document.querySelector("#black-and-white");
+     let blackAndWhiteIsOn = false;
+     blackAndWhite.addEventListener("click",function(e){
+     e.preventDefault(); 
+     blackAndWhiteIsOn = !blackAndWhiteIsOn; 
+     blackAndWhiteIsOn ? video.style.filter = "contrast(200%)  grayscale(100%)" : video.style.filter = "none"
+     });
+
+     const ghost = document.querySelector("#ghost");
+     let ghostIsOn = false;
+     ghost.addEventListener("click",function(e){
+     e.preventDefault(); 
+     ghostIsOn = !ghostIsOn; 
+     ghostIsOn ? video.style.filter =  "invert(75%)" : video.style.filter = "none"
+     });
+
+ }).catch(function(err){
+   alert("Yikes, an error!");
+ })
+ 
+ }
+
+
+</script>
 </html>
